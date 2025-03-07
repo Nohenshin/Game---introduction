@@ -12,6 +12,8 @@
 	
 	NOTE: to create transparent background, download GIMP, then use Color to Alpha feature 
 ================================================================ */
+#include <vector>
+using namespace std;
 
 #include <windows.h>
 #include <d3d10.h>
@@ -54,6 +56,8 @@ LPTEXTURE texBrick = NULL;
 LPTEXTURE texMisc = NULL;
 
 //vector<LPGAMEOBJECT> objects;  
+vector<CBrick*> bricks;
+
 
 LRESULT CALLBACK WinProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
@@ -82,9 +86,13 @@ void LoadResources()
 	//texMisc = game->LoadTexture(MISC_TEXTURE_PATH);
 
 	mario = new CMario(MARIO_START_X, MARIO_START_Y, MARIO_START_VX, MARIO_START_VY, texMario);
-	brick = new CBrick(BRICK_X, BRICK_Y, texBrick);
+	//brick = new CBrick(BRICK_X, BRICK_Y, texBrick);
 
-	
+	for (float x = 0; x < SCREEN_WIDTH; x += BRICK_X)
+	{
+		CBrick* brick = new CBrick(x, BRICK_Y, texBrick);
+		bricks.push_back(brick);
+	}
 	// objects.push_back(mario);
 	// for(i)		 
 	//		objects.push_back(new CGameObject(BRICK_X+i*BRICK_WIDTH,....);
@@ -109,7 +117,10 @@ void Update(DWORD dt)
 	*/
 
 	mario->Update(dt);
-	brick->Update(dt);
+	//brick->Update(dt);
+	for (CBrick* brick : bricks) {
+		brick->Update(dt);
+	}
 
 	//DebugOutTitle(L"01 - Skeleton %0.1f, %0.1f", mario->GetX(), mario->GetY());
 }
@@ -137,7 +148,10 @@ void Render()
 		FLOAT NewBlendFactor[4] = { 0,0,0,0 };
 		pD3DDevice->OMSetBlendState(g->GetAlphaBlending(), NewBlendFactor, 0xffffffff);
 
-		brick->Render();
+		//brick->Render();
+		for (CBrick* brick : bricks) {
+			brick->Render();
+		}
 		mario->Render();
 
 		// Uncomment this line to see how to draw a porttion of a texture  
