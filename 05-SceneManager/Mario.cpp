@@ -3,7 +3,7 @@
 
 #include "Mario.h"
 #include "Game.h"
-
+#include "Mushroom.h"
 #include "Goomba.h"
 #include "Coin.h"
 #include "Portal.h"
@@ -53,6 +53,8 @@ void CMario::OnCollisionWith(LPCOLLISIONEVENT e)
 		OnCollisionWithCoin(e);
 	else if (dynamic_cast<CPortal*>(e->obj))
 		OnCollisionWithPortal(e);
+	else if (dynamic_cast<CMushroom*>(e->obj))
+		OnCollisionWithMushroom(e);
 }
 
 void CMario::OnCollisionWithGoomba(LPCOLLISIONEVENT e)
@@ -101,6 +103,16 @@ void CMario::OnCollisionWithPortal(LPCOLLISIONEVENT e)
 	CGame::GetInstance()->InitiateSwitchScene(p->GetSceneId());
 }
 
+void CMario::OnCollisionWithMushroom(LPCOLLISIONEVENT e)
+{
+	CMushroom* mushroom = (CMushroom*)e->obj;
+
+	if (mushroom->getType() == MUSHROOM_1UP)
+	{
+		// + 1 up
+	}
+	e->obj->Delete();
+}
 //
 // Get animation ID for small Mario
 //
